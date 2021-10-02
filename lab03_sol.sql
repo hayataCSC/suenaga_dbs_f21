@@ -1,3 +1,4 @@
+-- WB: Looks good!
 -- Drop database "movie_ratings" if exists
 DROP DATABASE IF EXISTS movie_ratings;
 -- Create database "movie_ratings"
