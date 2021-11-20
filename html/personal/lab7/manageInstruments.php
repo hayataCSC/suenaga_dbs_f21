@@ -27,7 +27,7 @@
           }
         }
         /* Redirect the user to the original url */
-        header( "Location: {$_SERVER['REQUEST_URI']}", true, 303 );
+        header("Location: {$_SERVER['PHP_SELF']}", true, 303);
         exit();
 
       case 'add': /* Add new data entries */
@@ -42,13 +42,13 @@
           ('Trombone'),
           ('Keyboard');";
         if (!$conn->query($query)) die($conn->error);
-        header( "Location: {$_SERVER['REQUEST_URI']}", true, 303 );
+        header("Location: {$_SERVER['PHP_SELF']}", true, 303);
         exit();
 
       case 'delete_all': /* Delete all rows from the instrument table */
         $query = 'DELETE FROM instruments';
         if (!$conn->query($query)) die ($conn->error);
-        header( "Location: {$_SERVER['REQUEST_URI']}", true, 303 );
+        header("Location: {$_SERVER['PHP_SELF']}", true, 303);
         exit();
 
       default: break;
@@ -61,7 +61,7 @@
 
 <?php require('./inc/header.php') ?>
 
-<form id="delete_selection" action="./manageInstruments.php" method="POST">
+<form id="delete_selection" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
   <table class="table">
     <thead>
       <tr>
@@ -90,12 +90,12 @@
     <button class="btn btn-outline-danger" form="delete_selection" type="submit" name="operation" value="delete_selected_rows">Delete selected instruments</button>
   </div>
   <div class="col-sm" align="center">
-    <form action="./manageInstruments.php" method=POST>
+    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method=POST>
       <button class="btn btn-primary" type="submit" name="operation" value="add">Add sample records</button>
     </form>
   </div>
   <div class="col-sm" align="center">
-    <form action="./manageInstruments.php" method=POST>
+    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method=POST>
       <button class="btn btn-danger" type="submit" name="operation" value="delete_all">Delete all records</button>
     </form>
   </div>
