@@ -17,3 +17,5 @@ SOURCE procedures/trade_pokemons.sql;
 SOURCE procedures/delete_trainer_and_pokemons.sql;
 
 SOURCE sample_data.sql;
+
+SOURCE test_scripts.sql;
