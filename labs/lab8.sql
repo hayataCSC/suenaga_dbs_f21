@@ -51,21 +51,21 @@ VALUES ('Pikachu'),
        ('Butterfree');
 
 /* Insert sample pokemon data into the pokemon table */
-INSERT INTO pokemon(trainer_id, species_name)
-VALUES (1, 'Pikachu'),
-       (1, 'Charmander'),
-       (1, 'Bulbasuar'),
-       (1, 'Squirtle'),
-       (1, 'Geodude'),
-       (1, 'Magikarp'),
-       (1, 'Weedle'),
-       (2, 'Pikachu'),
-       (2, 'Charmander'),
-       (2, 'Bulbasuar'),
-       (2, 'Squirtle'),
-       (2, 'Geodude'),
-       (2, 'Magikarp'),
-       (2, 'Weedle');
+INSERT INTO pokemon(trainer_id, species_name, in_party)
+VALUES (1, 'Pikachu', 1),
+       (1, 'Charmander', 1),
+       (1, 'Bulbasuar', 1),
+       (1, 'Squirtle', 1),
+       (1, 'Geodude', 0),
+       (1, 'Magikarp', 0),
+       (1, 'Weedle', 0),
+       (2, 'Pikachu', 1),
+       (2, 'Charmander', 1),
+       (2, 'Bulbasuar', 1),
+       (2, 'Squirtle', 1),
+       (2, 'Geodude', 1),
+       (2, 'Magikarp', 1),
+       (2, 'Weedle', 1);
 
 /* Get the trainer_id of the pokemon_1.
 Get the trainer of pokemon_2.
@@ -137,13 +137,18 @@ BEGIN
   DECLARE trainer_1_id INT;
   DECLARE trainer_2_id INT;
 
+  /* Check if both pokemons are in parties */
+  IF (NOT is_in_party(pokemon_1_id) OR NOT is_in_party(pokemon_2_id)) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Both pokemons need to be in parties to be traded';
+  END IF;
+
   /* Get the trainer id for each pokemon */
   SET trainer_1_id = get_trainer_id_for_pokemon(pokemon_1_id);
   SET trainer_2_id = get_trainer_id_for_pokemon(pokemon_2_id);
 
-  /* Check if pokemons belong to the same trainer */
+  /* Check if pokemons belong to the same trainer. If they do, raise an error */
   IF trainer_1_id = trainer_2_id THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Pokemons belonging to the same trainer';
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Pokemons belonging to the same trainer cannot be traded';
   END IF;
 
   /* Start a transaction that changes the tainer id in both pokemon records */
@@ -154,5 +159,3 @@ BEGIN
 END $$
 
 DELIMITER ;
-
-CALL trade_pokemons(1, 14);
