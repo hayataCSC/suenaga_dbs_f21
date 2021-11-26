@@ -12,7 +12,7 @@ INSERT INTO pokemon(species_name, trainer_id, in_party)
   VALUES('Butterfree', 2, TRUE);
 
 /* Try to move a pokemon to a party when the trainer's pary is already full.
- * Should error with the message: "*/
+ * Should error with the message: "Only up to 6 pokemons can be in a trainer' party at a time" */
 UPDATE pokemon
   SET in_party=TRUE
   WHERE id=14;
