@@ -8,7 +8,7 @@ BEGIN
 /* If the updated pokemon is to be in a party, check for the maximum party size */
 IF (NEW.in_party) THEN
   IF (get_party_size(NEW.trainer_id) >= 6) THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Only up to 6 pokemons can be at a trainer\' party at a time';
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Only up to 6 pokemons can be in a trainer\' party at a time';
   END IF;
 END IF;
 END $$
