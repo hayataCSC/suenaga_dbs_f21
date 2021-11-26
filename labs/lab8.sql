@@ -27,7 +27,8 @@ CREATE TABLE pokemon (
   /* Column that shows if the pokemon is in party or not */
   in_party BOOLEAN DEFAULT FALSE,
   FOREIGN KEY (trainer_id)
-    REFERENCES trainer(id),
+    REFERENCES trainer(id)
+    ON DELETE RESTRICT,
   FOREIGN KEY (species_name)
     REFERENCES species(name)
 );
@@ -67,10 +68,6 @@ VALUES (1, 'Pikachu', 1),
        (2, 'Magikarp', 1),
        (2, 'Weedle', 0);
 
-/* Get the trainer_id of the pokemon_1.
-Get the trainer of pokemon_2.
-Remember trainer_id of pokemon_1
-Set the trainer_id of pokemon_1 to traie */
 
 DELIMITER $$
 
@@ -201,6 +198,27 @@ IF (NEW.in_party) THEN
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Only up to 6 pokemons can be at a trainer\' party at a time';
   END IF;
 END IF;
+END $$
+
+/* Procedure for deleting a trainer and pokemons that the trainer owns */
+CREATE PROCEDURE delete_trainer_and_pokemons
+(
+  trainer_id INT
+)
+BEGIN
+  /* Start a transaction. In this transaction, delete records from the
+   * pokemon and trainer tables */
+  START TRANSACTION;
+    /* Delete all pokemons owned by the trainer.
+     * Table alias cannot be used inside a delete statement.
+     * Use "using" keyward to specify the table to delete and its alias */
+    DELETE FROM p
+      USING pokemon AS p
+      WHERE p.trainer_id = trainer_id;
+    /* Delete the trainer */
+    DELETE FROM trainer
+      WHERE id = trainer_id;
+  COMMIT;
 END $$
 
 DELIMITER ;
