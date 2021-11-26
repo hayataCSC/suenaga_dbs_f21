@@ -24,6 +24,8 @@ CREATE TABLE pokemon (
   id INT AUTO_INCREMENT,
   species_name VARCHAR(255),
   trainer_id INT,
+  /* Column that shows if the pokemon is in party or not */
+  in_party BOOLEAN DEFAULT FALSE,
   FOREIGN KEY (trainer_id)
     REFERENCES trainer(id),
   FOREIGN KEY (species_name)
@@ -65,7 +67,6 @@ VALUES (1, 'Pikachu'),
        (2, 'Magikarp'),
        (2, 'Weedle');
 
--- START TRANSACTION;
 /* Get the trainer_id of the pokemon_1.
 Get the trainer of pokemon_2.
 Remember trainer_id of pokemon_1
@@ -100,6 +101,29 @@ BEGIN
   UPDATE pokemon
   SET trainer_id = new_trainer_id
   WHERE id = pokemon_id;
+END $$
+
+/* Function that returns a boolean indicating whether the specified pokemon is
+ * in a party */
+CREATE FUNCTION is_in_party
+(
+  pokemon_id INT
+)
+RETURNS BOOLEAN
+/* Whether a pokemon is in a party or not can differ across queries */
+NOT DETERMINISTIC
+BEGIN
+  /* Create a local variable that stores a boolean */
+  DECLARE is_in_party BOOLEAN;
+
+  /* Select the in_party field from the pokemon table
+   * and store it in the local variable */
+  SELECT in_party
+    INTO is_in_party
+    FROM pokemon
+    WHERE id = pokemon_id;
+
+  RETURN is_in_party;
 END $$
 
 /* Procedure for trading pokemons between two trainers */
