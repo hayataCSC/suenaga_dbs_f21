@@ -1,6 +1,8 @@
 <?php
     /* Configure the error level */
     require('./config/error.php');
+    /* Configure the timeout for sessions. Set the max lifetime to 30 min */
+    ini_set('session.gc_maxlifetime', 60 * 30);
     /* Start a session */
     session_start();
     /* Get the connect function */
@@ -94,8 +96,10 @@
         exit();
 
       case 'set_light_mode':
-        /* Set the mode cookie variable to light */
-        setcookie('mode', 'light');
+        /* Set the mode cookie variable to light.
+         * Set the expiration time to the  maximum epoch time - 1
+         * Epoch time is a 4 byte signed integer (32 bit + signed bit) */
+        setcookie('mode', 'light', 2^31 - 1);
 
         header("Location: {$_SERVER['PHP_SELF']}", true, 303);
         exit();
