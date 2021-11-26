@@ -32,6 +32,7 @@ CREATE TABLE pokemon (
     REFERENCES species(name)
 );
 
+//TODO: Move the insertion of sample data after registration of stored procedures
 /* Insert sample trainer data into the trainer table */
 INSERT INTO trainer(name)
 VALUES ('Will'),
@@ -65,7 +66,7 @@ VALUES (1, 'Pikachu', 1),
        (2, 'Squirtle', 1),
        (2, 'Geodude', 1),
        (2, 'Magikarp', 1),
-       (2, 'Weedle', 1);
+       (2, 'Weedle', 0);
 
 /* Get the trainer_id of the pokemon_1.
 Get the trainer of pokemon_2.
@@ -157,5 +158,30 @@ BEGIN
     CALL change_trainer_of_pokemon(pokemon_2_id, trainer_1_id);
   COMMIT;
 END $$
+
+/* Function to get a total number of pokemon in a trainer's party */
+CREATE FUNCTION get_party_size
+(
+  trainer_id INT
+)
+RETURNS INT
+/* Party size can vary across queries */
+NOT DETERMINISTIC
+BEGIN
+  /* Use session variable to store the party size */
+  SELECT count(*) into @count
+    FROM pokemon p
+    WHERE p.trainer_id = trainer_id AND p.in_party
+    GROUP BY p.trainer_id;
+  /* Return the party size */
+  RETURN @count;
+END $$
+
+/* Trigger that checks for the maximum party size before insertion of a new pokemon */
+/* CREATE TRIGGER before_pokemon_insert
+  BEFORE INSERT ON pokemon
+  FOR EACH ROW
+  BEGIN
+  END $$ */
 
 DELIMITER ;
