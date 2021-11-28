@@ -27,8 +27,16 @@ BEGIN
 
   /* Start a transaction that changes the tainer id in both pokemon records */
   START TRANSACTION;
+    /* Temporarily remove both pokemons from parties so that the transaction does not error
+     * for the illegal party size (which might happen on update of a pokemon's trainer id) */
+    CALL update_party_status(pokemon_1_id, FALSE);
+    CALL update_party_status(pokemon_2_id, FALSE);
+    /* Update the trainer id of both pokemons */
     CALL change_trainer_of_pokemon(pokemon_1_id, trainer_2_id);
     CALL change_trainer_of_pokemon(pokemon_2_id, trainer_1_id);
+    /* Move back both pokemons to parties */
+    CALL update_party_status(pokemon_1_id, TRUE);
+    CALL update_party_status(pokemon_2_id, TRUE);
   COMMIT;
 END $$
 
