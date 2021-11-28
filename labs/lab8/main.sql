@@ -12,9 +12,11 @@ SOURCE functions/get_party_size.sql;
 SOURCE triggers/before_pokemon_insert.sql;
 SOURCE triggers/before_pokemon_update.sql;
 
+SOURCE procedures/update_party_status.sql;
 SOURCE procedures/change_trainer_of_pokemon.sql;
 SOURCE procedures/trade_pokemons.sql;
 SOURCE procedures/delete_trainer_and_pokemons.sql;
+SOURCE procedures/get_party.sql;
 
 SOURCE sample_data.sql;
 
