@@ -16,3 +16,25 @@ INSERT INTO pokemon(species_name, trainer_id, in_party)
 UPDATE pokemon
   SET in_party=TRUE
   WHERE id=14;
+
+/* Show trainer #1's party */
+CALL get_party(1);
+/* Show trainer #2's party */
+CALL get_party(2);
+
+/* Trade pokemon #1 owned by trainer #1 and pokemon #13 owned by trainer #2 */
+CALL trade_pokemons(1, 13);
+
+/* Show trainer #1's party */
+CALL get_party(1);
+/* Show trainer #2's party */
+CALL get_party(2);
+
+/* Get the id of the trainer "Will" */
+SELECT id
+  INTO @trainer_id
+  FROM trainer
+  WHERE name="Will";
+
+/* Using the trainer id retrieved, delete Will */
+CALL delete_trainer_and_pokemons(@trainer_id);
