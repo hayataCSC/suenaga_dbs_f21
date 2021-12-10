@@ -1,3 +1,5 @@
+-- WB: Good work Hayata. Adding so much sample data was above and beyond 
+-- WB: the call of duty, well done!
 DROP DATABASE IF EXISTS rug_shop;
 
 CREATE DATABASE rug_shop;
