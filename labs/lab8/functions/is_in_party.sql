@@ -8,6 +8,8 @@ CREATE FUNCTION is_in_party
 )
 RETURNS BOOLEAN
 /* Whether a pokemon is in a party or not can differ across queries */
+-- WB: DETERMINISTIC refers to side effects, functions are typically deterministic, because 
+-- WB: they don't change anything about the database.
 NOT DETERMINISTIC
 BEGIN
   /* Create a local variable that stores a boolean */
